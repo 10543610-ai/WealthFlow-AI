@@ -5,10 +5,27 @@ import AccountManager from './components/AccountManager';
 import TransactionManager from './components/TransactionManager';
 import StockMarket from './components/StockMarket';
 import AIAdvisor from './components/AIAdvisor';
-import { AppData, BankAccount, Transaction, StockHolding, User } from './types';
+import { AppData, BankAccount, Transaction, StockHolding, User, TransactionType } from './types';
 import { auth, db, googleProvider } from './services/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+
+// 預設示範資料
+const SAMPLE_DATA: AppData = {
+  accounts: [
+    { id: 'acc_demo_1', name: '薪轉帳戶', type: 'Savings', balance: 52000, currency: 'TWD' },
+    { id: 'acc_demo_2', name: '主要信用卡', type: 'Credit', balance: -8500, currency: 'TWD' }
+  ],
+  transactions: [
+    { id: 'tx_demo_1', accountId: 'acc_demo_1', date: new Date().toISOString().split('T')[0], amount: 65000, type: TransactionType.INCOME, category: '薪資', description: '本月薪資收入' },
+    { id: 'tx_demo_2', accountId: 'acc_demo_2', date: new Date().toISOString().split('T')[0], amount: 250, type: TransactionType.EXPENSE, category: '飲食', description: '商業午餐' },
+    { id: 'tx_demo_3', accountId: 'acc_demo_2', date: new Date().toISOString().split('T')[0], amount: 1200, type: TransactionType.EXPENSE, category: '交通', description: '高鐵票' }
+  ],
+  stocks: [
+    { id: 'st_demo_1', symbol: '2330', name: '台積電', shares: 1000, avgCost: 550, currentPrice: 780, market: 'TWSE' },
+    { id: 'st_demo_2', symbol: 'AAPL', name: 'Apple Inc.', shares: 10, avgCost: 150, currentPrice: 185, market: 'NASDAQ' }
+  ]
+};
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'accounts' | 'transactions' | 'stocks'>('dashboard');
@@ -55,12 +72,11 @@ const App: React.FC = () => {
         setTransactions(data.transactions || []);
         setStocks(data.stocks || []);
       } else {
-        // 如果是新用戶，初始化空資料
-        await setDoc(docRef, {
-          accounts: [],
-          transactions: [],
-          stocks: []
-        });
+        // 如果是新用戶，初始化示範資料
+        await setDoc(docRef, SAMPLE_DATA);
+        setAccounts(SAMPLE_DATA.accounts);
+        setTransactions(SAMPLE_DATA.transactions);
+        setStocks(SAMPLE_DATA.stocks);
       }
     } catch (error) {
       console.error("Error loading user data:", error);

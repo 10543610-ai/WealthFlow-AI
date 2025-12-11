@@ -2,12 +2,13 @@ import { GoogleGenAI } from "@google/genai";
 import { AppData } from '../types';
 
 const getAiClient = () => {
+  // Use process.env.API_KEY exclusively as per guidelines
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
     console.warn("API Key is missing. AI features will not work.");
     return null;
   }
-  return new GoogleGenAI({ apiKey });
+  return new GoogleGenAI({ apiKey: process.env.API_KEY });
 };
 
 export const analyzeFinances = async (data: AppData): Promise<string> => {
