@@ -1,6 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
 // 直接存取 import.meta.env.VARIABLE 以確保 Vite 能進行靜態替換 (Static Replacement)。
 // 使用 @ts-ignore 忽略 TypeScript 可能報出的型別錯誤，確保建置順利。
@@ -20,7 +20,12 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
+// Initialize Firebase (Compat/v8)
+// Check if already initialized to prevent errors in hot-reload environments
+const app = !firebase.apps.length 
+  ? firebase.initializeApp(firebaseConfig) 
+  : firebase.app();
+
+export const auth = app.auth();
+export const db = app.firestore();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();

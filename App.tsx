@@ -7,8 +7,7 @@ import StockMarket from './components/StockMarket';
 import AIAdvisor from './components/AIAdvisor';
 import { AppData, BankAccount, Transaction, StockHolding, User, TransactionType } from './types';
 import { auth, db, googleProvider } from './services/firebase';
-import { onAuthStateChanged, signInWithPopup, signOut, User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import firebase from 'firebase/app';
 
 // 預設示範資料
 const SAMPLE_DATA: AppData = {
@@ -40,7 +39,8 @@ const App: React.FC = () => {
 
   // 監聽 Firebase 登入狀態
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser: FirebaseUser | null) => {
+    // 使用 Namespaced SDK (v8/Compat)
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser: firebase.User | null) => {
       if (currentUser) {
         setUser({
           id: currentUser.uid,
@@ -63,17 +63,20 @@ const App: React.FC = () => {
   // 從 Firestore 讀取資料
   const loadUserData = async (uid: string) => {
     try {
-      const docRef = doc(db, 'users', uid);
-      const docSnap = await getDoc(docRef);
+      // 使用 Namespaced SDK
+      const docRef = db.collection('users').doc(uid);
+      const docSnap = await docRef.get();
 
-      if (docSnap.exists()) {
+      // 在 v8 SDK 中，exists 是一個屬性而非方法
+      if (docSnap.exists) {
         const data = docSnap.data() as AppData;
         setAccounts(data.accounts || []);
         setTransactions(data.transactions || []);
         setStocks(data.stocks || []);
       } else {
         // 如果是新用戶，初始化示範資料
-        await setDoc(docRef, SAMPLE_DATA);
+        // 使用 Namespaced SDK
+        await docRef.set(SAMPLE_DATA);
         setAccounts(SAMPLE_DATA.accounts);
         setTransactions(SAMPLE_DATA.transactions);
         setStocks(SAMPLE_DATA.stocks);
@@ -89,7 +92,8 @@ const App: React.FC = () => {
 
     const saveData = async () => {
       try {
-        await setDoc(doc(db, 'users', user.id), {
+        // 使用 Namespaced SDK
+        await db.collection('users').doc(user.id).set({
           accounts,
           transactions,
           stocks
@@ -105,7 +109,8 @@ const App: React.FC = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      // 使用 Namespaced SDK
+      await auth.signInWithPopup(googleProvider);
     } catch (error) {
       console.error("Login failed:", error);
       alert("登入失敗，請稍後再試");
@@ -114,7 +119,8 @@ const App: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      // 使用 Namespaced SDK
+      await auth.signOut();
     } catch (error) {
       console.error("Logout failed:", error);
     }
