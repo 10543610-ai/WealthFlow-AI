@@ -1,0 +1,5 @@
+{
+  "name": "WealthFlow AI - Personal Finance Manager",
+  "description": "A comprehensive personal finance management system featuring bank account tracking, stock portfolio management with simulated real-time updates, transaction categorization, and AI-powered financial advice.",
+  "requestFramePermissions": []
+}
