@@ -1,16 +1,22 @@
-/// <reference types="vite/client" />
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// 在 Vite 環境中直接使用 import.meta.env
-// 並確保 vite-env.d.ts 或上方 reference 存在以支援型別
+// 直接存取 import.meta.env.VARIABLE 以確保 Vite 能進行靜態替換 (Static Replacement)。
+// 使用 @ts-ignore 忽略 TypeScript 可能報出的型別錯誤，確保建置順利。
+
 const firebaseConfig = {
+  // @ts-ignore
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  // @ts-ignore
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  // @ts-ignore
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  // @ts-ignore
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  // @ts-ignore
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  // @ts-ignore
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 

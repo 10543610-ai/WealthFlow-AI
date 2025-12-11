@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
   // 載入環境變數 (支援 .env 檔案與系統變數)
-  const env = loadEnv(mode, process.cwd(), '');
+  // Fix: use '.' instead of process.cwd() to avoid missing Node types error for 'cwd'
+  const env = loadEnv(mode, '.', '');
 
   return {
     plugins: [react()],

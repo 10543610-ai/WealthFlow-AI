@@ -7,7 +7,7 @@ import StockMarket from './components/StockMarket';
 import AIAdvisor from './components/AIAdvisor';
 import { AppData, BankAccount, Transaction, StockHolding, User, TransactionType } from './types';
 import { auth, db, googleProvider } from './services/firebase';
-import { signInWithPopup, signOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { onAuthStateChanged, signInWithPopup, signOut, User as FirebaseUser } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 // 預設示範資料
