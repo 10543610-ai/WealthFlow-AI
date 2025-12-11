@@ -1,6 +1,6 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
 // 直接存取 import.meta.env.VARIABLE 以確保 Vite 能進行靜態替換 (Static Replacement)。
 // 使用 @ts-ignore 忽略 TypeScript 可能報出的型別錯誤，確保建置順利。

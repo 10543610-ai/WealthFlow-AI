@@ -7,7 +7,7 @@ import StockMarket from './components/StockMarket';
 import AIAdvisor from './components/AIAdvisor';
 import { AppData, BankAccount, Transaction, StockHolding, User, TransactionType } from './types';
 import { auth, db, googleProvider } from './services/firebase';
-import firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
 
 // 預設示範資料
 const SAMPLE_DATA: AppData = {
